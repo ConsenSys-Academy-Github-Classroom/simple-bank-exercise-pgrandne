@@ -73,7 +73,7 @@ contract SimpleBank {
 
     /// @notice Deposit ether into bank
     /// @return The balance of the user after the deposit is made
-    function deposit() payable public returns (uint) {
+    function deposit() public payable returns (uint) {
       // 1. Add the appropriate keyword so that this function can receive ether
 
     
@@ -103,10 +103,15 @@ contract SimpleBank {
       // return the user's balance.
 
       // 1. Use a require expression to guard/ensure sender has enough funds
+      require(balances[msg.sender] >= withdrawAmount, "You don't have enough funds");
 
       // 2. Transfer Eth to the sender and decrement the withdrawal amount from
       //    sender's balance
+      msg.sender.call.value(withdrawAmount);
+      balances[msg.sender] -= withdrawAmount;
 
       // 3. Emit the appropriate event for this message
+      emit LogWithdrawal(msg.sender, withdrawAmount, balances[msg.sender]);
+
     }
 }
